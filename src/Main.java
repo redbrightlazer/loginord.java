@@ -1,54 +1,43 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 import javax.swing.*;
 
 public class Main {
-    static Scanner can = new Scanner(System.in);
+
 
 
 
     public static void main(String[] args) {
         ArrayList <String> dataBase = new ArrayList<>();
-        //asdasdasd
-
+        boolean exit = false;
         JOptionPane.showMessageDialog(null,"Welcome to the program!");
 
         JOptionPane.showMessageDialog(null," Here are your options:");
 
-        while (true) {
-            String mode = JOptionPane.showInputDialog("1. Register \n 2. Login \n 3. View registered users");
+        while (!exit) {
+            String mode = JOptionPane.showInputDialog("1. Register \n 2. Login \n 3. View registered users \n 4. Exit");
 
 
 
             switch (mode) {
-                case "1":
-                    registration(dataBase);
-                    break;
-
-                case "2":
-                    login(dataBase);
-                    break;
-
-                case "3":
-                    viewRegisteredUsers(database);
-                    break;
-
-                default:
-                    JOptionPane.showMessageDialog(null,"nuh uh uh");
+                case "1" -> registration(dataBase);
+                case "2" -> login(dataBase);
+                case "3" -> viewRegisteredUsers(dataBase);
+                case "4" -> exit = true;
+                default -> JOptionPane.showMessageDialog(null,"nuh uh uh");
             }
         }
     }
 
     public static void registration(ArrayList<String> dataBase)
     {
-            String role = "";
+            String role;
             String username = JOptionPane.showInputDialog("Enter your username to register");
             int coin = coincidence(dataBase, username);
             if (coin == -1) {
                 String password = pass();
                 dataBase.add(username);
                 dataBase.add(password);
-                Boolean adminEx = adminfinder(dataBase);
+                Boolean adminEx = adminFinder(dataBase);
                 if(!adminEx)
                 {
                     role = (JOptionPane.showInputDialog("Do you reg as an admin?"));
@@ -160,20 +149,20 @@ public class Main {
 
     public static void viewRegisteredUsers(ArrayList <String> dataBase)
     {
-        String anser = JOptionPane.showInputDialog("Would you like to see it in administrator mode? y/n");
-        if(anser.equals("y"))
+        String answer = JOptionPane.showInputDialog("Would you like to see it in administrator mode? y/n");
+        if(answer.equals("y"))
         {
             String username = JOptionPane.showInputDialog("Enter the username of the admin");
 
             String password = JOptionPane.showInputDialog("Enter the password of the admin");
-            if(username.equals(dataBase.get(0)) && password.equals(dataBase.get(+1)))
+            if(username.equals(dataBase.get(0)) && password.equals(dataBase.get(1)))
             {
-                JOptionPane.showMessageDialog(null, "Correct, here is the usernames and password:"+superlogin(users, passwords));
+                JOptionPane.showMessageDialog(null, "Correct, here is the usernames and password:"+superLogin(dataBase));
             }
         }
-        else if(anser.equals("n"))
+        else if(answer.equals("n"))
         {
-            JOptionPane.showMessageDialog(null, "Registered users:\n "+logins(users, passwords));
+            JOptionPane.showMessageDialog(null, "Registered users:\n "+logins(dataBase));
         }
         else
         {
@@ -182,32 +171,32 @@ public class Main {
 
     }
 
-    public static String logins(ArrayList <String> users, ArrayList <String> passwords)
+    public static String logins(ArrayList <String> dataBase)
     {
-        String login = "";
-        for (int i = 0; i < users.size(); i++)
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < dataBase.size(); i+=3)
         {
-          if(users.get(i)==null)
+          if(dataBase.get(i)==null)
           {
               break;
           }
-          login+="\n"+users.get(i);
+            sb.append("\n").append(dataBase.get(i));
         }
-        return login;
+        return sb.toString();
     }
 
-    public static String superLogin(ArrayList <String> users, ArrayList <String> passwords)
+    public static String superLogin(ArrayList <String> dataBase)
     {
-        String login = "";
-        for (int i = 0; i < users.size(); i++)
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < dataBase.size(); i+=3)
         {
-            if(users.get(i)==null)
+            if(dataBase.get(i)==null)
             {
                 break;
             }
-            login+="\n Username: "+users.get(i)+" Password: "+passwords.get(i);
+            sb.append("\n Username: ").append(dataBase.get(i)).append(" Password: ").append(dataBase.get(i+1));
         }
-        return login;
+        return sb.toString();
     }
     public static int coincidence(ArrayList <String> dataBase, String username) {
         for (int i = 0; i < dataBase.size(); i+=3) {
@@ -228,7 +217,7 @@ public class Main {
         if (pass1.equals(pass2)) {
             return pass2;
         } else {
-            JOptionPane.showMessageDialog(null,"Passwords don't match.");;
+            JOptionPane.showMessageDialog(null,"Passwords don't match.");
             return pass();
         }
     }
